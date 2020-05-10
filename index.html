@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Crud Produto</title>
+</head>
+<body onload="createVueApp(); vApp.getProdutos();">
+    <div id="app" class="container">
+        <h1 class="text-center">Produtos</h1>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Código</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Unidade</th>
+                <th scope="col">Preço</th>
+                <th scope="col">Saldo</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for = "(produto, index) in produtos">
+                <th scope="row">{{produto.codigo}}</th>
+                <td>{{produto.descricao}}</td>
+                <td>{{produto.unidade}}</td>
+                <td>R${{produto.preco.toFixed(2).replace('.',',')}}</td>
+                <td>R${{produto.saldo.toFixed(2).replace('.',',')}}</td>
+                <td>
+                    <button type="button" class="btn btn-warning mr-3" v-bind:data-object-index="index" onclick="enablePut(this)" data-toggle="modal" data-target="#postModal"><i class="fas fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger" v-bind:data-object-index="index" onclick="vApp.deleteProduto(this)"><i class="fas fa-trash"></i></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="row justify-content-center">
+            <button type="button" class="btn btn-light mr-5 btn-lg" onclick="vApp.getProdutos();">Todos</button>
+            <button type="button" class="btn btn-secondary mr-5 btn-lg" data-toggle="modal" data-target="#codigoModal">Código</button>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#postModal">Cadastrar</button>
+          </div>
+
+          <!--modal get codigo-->
+          <div class="modal fade" id="codigoModal" tabindex="-1" role="dialog" aria-labelledby="codigoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Pegar por código</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="busca-codigo">código</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="123456" aria-label="123456" aria-describedby="busca-codigo" id="fbusca-codigo">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                  <button type="button" class="btn btn-primary" onclick="vApp.getProdutoCodigo();">Buscar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--modal post produto-->
+          <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="codigoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Pegar por código</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                    <input type="hidden" id="fcodigo">
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text mb-3" id="ldescricao">Descrição</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Descrição do produto" aria-label="123456" aria-describedby="ldescricao" id="fdescricao">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text mb-3" id="lunidade">Unidade</span>
+                          </div>
+                          <input type="text" class="form-control" placeholder="litros, kg, gramas" aria-label="123456" aria-describedby="lunidade" id="funidade">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text mb-3" id="lpreco">Preço</span>
+                          </div>
+                          <input type="number" class="form-control" placeholder="10" aria-label="123456" aria-describedby="lpreço" id="fpreco">
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text mb-3" id="lsaldo">Saldo</span>
+                          </div>
+                          <input type="number" class="form-control" placeholder="10" aria-label="123456" aria-describedby="lsaldo" id="fsaldo">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                  <button type="button" class="btn btn-primary" onclick="vApp.postProduto();" id="btnSend">Cadastrar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://kit.fontawesome.com/9e4795bd97.js" crossorigin="anonymous"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
