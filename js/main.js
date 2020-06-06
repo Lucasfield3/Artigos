@@ -1,41 +1,70 @@
-const URLAPP = 'https://crud-basico-barbieri.herokuapp.com/produtos';
+const URLAPP = 'https://tio-dev-web.herokuapp.com/artigos';
 var vApp;
 function createVueApp() {
     vApp = new Vue({
         el: '#app',
         data() {
             return {
-                produtos: [{}],
+                artigos: [{}],
                 projeto: 'DEVWEB - V1.00'
             }
         },
         methods: {
-            getProdutos: function () {
+            getArtigos: function () {
                 axios.get(URLAPP)
                     .then(function (response) {
                         console.log(response)
                         if (response.status == 200)
-                            vApp.produtos = response.data
+                            vApp.artigos = response.data
                     })
                     .catch(function (error) {
                         console.error(error)
                     })
             },
-            getProdutoCodigo: function () {
-                let codigo = document.querySelector('#fbusca-codigo').value
+            getArtigosSelecionados: function () {
+                let busca = document.querySelector('#campo-busca').value
+                let tipoBusca  =document.getElementById('tipo-busca').value
 
-                axios.get(`${URLAPP}/${codigo}`)
-                    .then( function (response) {
-                        console.log(response)
-                        if (response.status == 200)
-                            vApp.produtos = [response.data]
-                            document.querySelector('#fbusca-codigo').value = ''
-                    })
-                    .catch(function (error) {
-                        console.error(error)
-                    })
+                switch (tipoBusca){
+                    case 'titulo-area':
+                        axios.get(`${URLAPP}/titulo-area?search=${busca}`)
+                        .then( function (response) {
+                            console.log(response)
+                            if (response.status == 200)
+                                vApp.artigos = response.data
+                        })
+                        .catch(function (error) {
+                            console.error(error)
+                        })
+                    break;
+                    case 'id':
+                        axios.get(`${URLAPP}/${busca}`)
+                        .then( function (response) {
+                            console.log(response)
+                            if (response.status == 200)
+                                vApp.artigos = [response.data]
+                        })
+                        .catch(function (error) {
+                            console.error(error)
+                        })
+                    break;
+                    case 'link':
+                        axios.get(`${URLAPP}/link?link=${busca}`)
+                        .then( function (response) {
+                            console.log(response)
+                            if (response.status == 200)
+                                vApp.artigos = [response.data]
+                        })
+                        .catch(function (error) {
+                            console.error(error)
+                        })
+                    break;
+                    default:
+                            
+                }
+               
             },
-            postProduto: function () {
+            postArtigo: function () {
 
                 var formDesc = document.querySelector('#fdescricao').value
 
@@ -92,10 +121,10 @@ function createVueApp() {
                         console.log(error)
                     })
             },
-            deleteProduto: function (obj) {
+            deleteArtigo: function (obj) {
                 var i = parseInt(obj.dataset.objectIndex)
 
-                var product = vApp.produtos[i]
+                var product = vApp.artigos[i]
 
                 var codigo = product.codigo
 
@@ -123,7 +152,7 @@ function enablePut(index) {
 
     var i = parseInt(index.dataset.objectIndex)
 
-    var product = vApp.produtos[i]
+    var product = vApp.artigos[i]
 
     document.querySelector('#fdescricao').value = product.descricao
 
@@ -136,3 +165,4 @@ function enablePut(index) {
     document.querySelector('#fcodigo').value = product.codigo
 
 }
+

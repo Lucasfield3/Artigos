@@ -6,37 +6,63 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <title>Crud Produto</title>
 </head>
-<body onload="createVueApp(); vApp.getProdutos();">
+<body onload="createVueApp(); vApp.getArtigos();">
     <div id="app" class="container">
         <h1 class="text-center">Produtos</h1>
+        <div class="row mb-3">    
+          <div class="col-7">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                <select id="tipo-busca">
+                  <option value="titulo-area"  selected>Título ou área</option>
+                  <option value="id">Id</option>
+                  <option value="link">Link</option>
+                </select>
+              </div>
+              </div>
+              <input type="text" class="form-control" id="campo-busca" placeholder="Busca" aria-label="Busca" aria-describedby="basic-addon1">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" onclick=" vApp.getArtigosSelecionados();" type="button">Buscar</button>
+              </div>
+            </div>
+        </div>
+        <div class="col-5">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="">Datas</span>
+            </div>
+            <input type="text" placeholder="data de" class="form-control">
+            <input type="text" placeholder="data até" class="form-control">
+          </div>
+        </div>
+        </div>
         <table class="table">
             <thead>
               <tr>
-                <th scope="col">Código</th>
-                <th scope="col">Descrição</th>
-                <th scope="col">Unidade</th>
-                <th scope="col">Preço</th>
-                <th scope="col">Saldo</th>
-                <th scope="col">Ações</th>
+                <th scope="col">Id</th>
+                <th scope="col">Título</th>
+                <th scope="col">Área</th>
+                <th scope="col">Link</th>
+                <th scope="col">Data de publocação</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for = "(produto, index) in produtos">
-                <th scope="row">{{produto.codigo}}</th>
-                <td>{{produto.descricao}}</td>
-                <td>{{produto.unidade}}</td>
-                <td>R${{produto.preco.toFixed(2).replace('.',',')}}</td>
-                <td>R${{produto.saldo.toFixed(2).replace('.',',')}}</td>
-                <td>
+              <tr v-for = "(artigo, index) in artigos">
+                <th scope="row">{{artigo.id}}</th>
+                <td>{{artigo.titulo}}</td>
+                <td>{{artigo.area}}</td>
+                <td>{{artigo.hiperLink}}</td>
+                <td>{{artigo.dataPublicacao}}</td>
+                <!-- <td>
                     <button type="button" class="btn btn-warning mr-3" v-bind:data-object-index="index" onclick="enablePut(this)" data-toggle="modal" data-target="#postModal"><i class="fas fa-edit"></i></button>
                     <button type="button" class="btn btn-danger" v-bind:data-object-index="index" onclick="vApp.deleteProduto(this)"><i class="fas fa-trash"></i></button>
-                </td>
+                </td> -->
               </tr>
             </tbody>
           </table>
           <div class="row justify-content-center">
-            <button type="button" class="btn btn-light mr-5 btn-lg" onclick="vApp.getProdutos();">Todos</button>
-            <button type="button" class="btn btn-secondary mr-5 btn-lg" data-toggle="modal" data-target="#codigoModal">Código</button>
+            <button type="button" class="btn btn-light mr-5 btn-lg" onclick="vApp.getArtigos();">Todos</button>
             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#postModal">Cadastrar</button>
           </div>
 
@@ -60,7 +86,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-primary" onclick="vApp.getProdutoCodigo();">Buscar</button>
+                  <button type="button" class="btn btn-primary" onclick="vApp.getArtigoCodigo();">Buscar</button>
                 </div>
               </div>
             </div>
@@ -110,7 +136,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-primary" onclick="vApp.postProduto();" id="btnSend">Cadastrar</button>
+                  <button type="button" class="btn btn-primary" onclick="vApp.postArtigo();" id="btnSend">Cadastrar</button>
                 </div>
               </div>
             </div>
