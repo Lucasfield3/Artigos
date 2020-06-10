@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet"  href="css/style.css">
     <title>Crud Produto</title>
 </head>
 <body onload="createVueApp(); vApp.getArtigos();">
     <div id="app" class="container">
         <h1 class="text-center">Produtos</h1>
-        <div class="row mb-3">    
-          <div class="col-7">
+        <div class="row mb-3 d-flex justify-content-between">    
+          <div class="col-5">
             <div class="input-group">
               <div class="input-group-prepend">
-                <div class="input-group-text">
-                <select id="tipo-busca">
+                <div class="input-group-text bg-light " id="fundo">
+                <select class="bg-light text-secondary border-0" id="tipo-busca">
                   <option value="titulo-area"  selected>Título ou área</option>
                   <option value="id">Id</option>
                   <option value="link">Link</option>
@@ -28,36 +29,36 @@
             </div>
         </div>
         <div class="col-5">
-          <div class="input-group">
-            <div class="input-group-prepend">
+          <div class="input-group w-100">
+            <div class="input-group-prepend sm">
               <span class="input-group-text" id="">Datas</span>
             </div>
-            <input type="text" placeholder="data de" class="form-control">
-            <input type="text" placeholder="data até" class="form-control">
+            <input type="date" placeholder="data de" class="form-control data">
+            <input type="date" placeholder="data até" class="form-control data">
           </div>
         </div>
         </div>
         <table class="table">
-            <thead>
+            <thead id='tabela'>
               <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Título</th>
                 <th scope="col">Área</th>
                 <th scope="col">Link</th>
-                <th scope="col">Data de publocação</th>
+                <th scope="col">Data de publicação</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for = "(artigo, index) in artigos">
+            <tbody >
+              <tr id="tabela" v-for = "(artigo, index) in artigos">
                 <th scope="row">{{artigo.id}}</th>
                 <td>{{artigo.titulo}}</td>
                 <td>{{artigo.area}}</td>
                 <td>{{artigo.hiperLink}}</td>
                 <td>{{artigo.dataPublicacao}}</td>
-                <!-- <td>
+                <td>
                     <button type="button" class="btn btn-warning mr-3" v-bind:data-object-index="index" onclick="enablePut(this)" data-toggle="modal" data-target="#postModal"><i class="fas fa-edit"></i></button>
-                    <button type="button" class="btn btn-danger" v-bind:data-object-index="index" onclick="vApp.deleteProduto(this)"><i class="fas fa-trash"></i></button>
-                </td> -->
+                    <button type="button" class="btn btn-danger" v-bind:data-object-index="index" onclick="vApp.deleteArtigo(this)"><i class="fas fa-trash"></i></button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -71,7 +72,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Pegar por código</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Pegar por id</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -79,7 +80,7 @@
                 <div class="modal-body">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                          <span class="input-group-text" id="busca-codigo">código</span>
+                          <span class="input-group-text" id="busca-codigo">id</span>
                         </div>
                         <input type="text" class="form-control" placeholder="123456" aria-label="123456" aria-describedby="busca-codigo" id="fbusca-codigo">
                     </div>
@@ -97,46 +98,46 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Pegar por código</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Alterar artigo</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
 
-                    <input type="hidden" id="fcodigo">
+                    <input type="hidden" id="fid">
 
                     <div class="input-group">
                         <div class="input-group-prepend">
-                          <span class="input-group-text mb-3" id="ldescricao">Descrição</span>
+                          <span class="input-group-text mb-3" id="ltitulo">Título</span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Descrição do produto" aria-label="123456" aria-describedby="ldescricao" id="fdescricao">
+                        <input type="text" class="form-control" placeholder="Título" aria-label="123456" aria-describedby="ltitulo" id="ftitulo">
                     </div>
 
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text mb-3" id="lunidade">Unidade</span>
+                            <span class="input-group-text mb-3" id="larea">Área</span>
                           </div>
-                          <input type="text" class="form-control" placeholder="litros, kg, gramas" aria-label="123456" aria-describedby="lunidade" id="funidade">
+                          <input type="text" class="form-control" placeholder="Área" aria-label="123456" aria-describedby="larea" id="farea">
                     </div>
 
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text mb-3" id="lpreco">Preço</span>
+                            <span class="input-group-text mb-3" id="llink">Link</span>
                           </div>
-                          <input type="number" class="form-control" placeholder="10" aria-label="123456" aria-describedby="lpreço" id="fpreco">
+                          <input type="text" class="form-control" placeholder="link" aria-label="123456" aria-describedby="llink" id="flink">
                     </div>
 
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text mb-3" id="lsaldo">Saldo</span>
+                            <span class="input-group-text mb-3" id="ldataPublicacao">Data de pubicação</span>
                           </div>
-                          <input type="number" class="form-control" placeholder="10" aria-label="123456" aria-describedby="lsaldo" id="fsaldo">
+                          <input type="date" class="form-control" placeholder="Data" aria-label="123456" aria-describedby="ldataPublicacao" id="fdataPublicacao">
                     </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-primary" onclick="vApp.postArtigo();" id="btnSend">Cadastrar</button>
+                  <button type="button" class="btn btn-primary" onclick="vApp.postArtigo();" id="btnCad">Cadastrar</button>
                 </div>
               </div>
             </div>

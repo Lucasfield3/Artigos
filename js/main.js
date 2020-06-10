@@ -14,8 +14,11 @@ function createVueApp() {
                 axios.get(URLAPP)
                     .then(function (response) {
                         console.log(response)
-                        if (response.status == 200)
-                            vApp.artigos = response.data
+                    if(response.status == 200){
+                        vApp.artigos = response.data;
+                    }else {
+                        vApp.artigos = [];
+                    }
                     })
                     .catch(function (error) {
                         console.error(error)
@@ -23,15 +26,18 @@ function createVueApp() {
             },
             getArtigosSelecionados: function () {
                 let busca = document.querySelector('#campo-busca').value
-                let tipoBusca  =document.getElementById('tipo-busca').value
+                let tipoBusca = document.getElementById('tipo-busca').value
 
                 switch (tipoBusca){
                     case 'titulo-area':
                         axios.get(`${URLAPP}/titulo-area?search=${busca}`)
                         .then( function (response) {
                             console.log(response)
-                            if (response.status == 200)
+                            if (response.status == 200){
                                 vApp.artigos = response.data
+                            }else if(response.status == 204){
+                                alert('busca não existe');
+                            }
                         })
                         .catch(function (error) {
                             console.error(error)
@@ -41,8 +47,11 @@ function createVueApp() {
                         axios.get(`${URLAPP}/${busca}`)
                         .then( function (response) {
                             console.log(response)
-                            if (response.status == 200)
+                            if (response.status == 200){
                                 vApp.artigos = [response.data]
+                            }else if(response.status == 204){
+                                alert('busca não existe');
+                            }
                         })
                         .catch(function (error) {
                             console.error(error)
@@ -52,70 +61,86 @@ function createVueApp() {
                         axios.get(`${URLAPP}/link?link=${busca}`)
                         .then( function (response) {
                             console.log(response)
-                            if (response.status == 200)
+                            if (response.status == 200){
                                 vApp.artigos = [response.data]
+                            }else if(response.status == 204){
+                                alert('busca não existe');
+                            }
                         })
                         .catch(function (error) {
                             console.error(error)
                         })
                     break;
                     default:
-                            
+                    
+                    break;
                 }
                
             },
+
+            getData: function (){
+
+
+
+            },
             postArtigo: function () {
 
-                var formDesc = document.querySelector('#fdescricao').value
+                var formTitulo = document.querySelector('#ftitulo').value
 
-                var formUnid = document.querySelector('#funidade').value
+                var formArea = document.querySelector('#farea').value
 
-                var formPrec = document.querySelector('#fpreco').value
+                var formLink = document.querySelector('#flink').value
 
-                var formSald = document.querySelector('#fsaldo').value
+                var formData = document.querySelector('#fdataPublicacao').value
 
-                document.querySelector('#fcodigo').value = ''
+                document.querySelector('#fid').value = ''
    
                 var body = {
-                    descricao: formDesc, 
-                    unidade: formUnid, 
-                    preco: parseFloat(formPrec).toFixed(2), 
-                    saldo: parseFloat(formSald).toFixed(2)
+                    titulo: formTitulo, 
+                    area: formArea, 
+                    hiperLink: formLink, 
+                    dataPublicacao: formData
                 }
 
                 axios.post(URLAPP, body)
                     .then(function (response) {
                         console.log(response)
+                        vApp.artigos.push(response.data)
                     })
                     .catch(function (error) {
                         console.log(error)
                     })
+                    console.log(body);
+   
             },
-            putProduto: function () {
+            putArtigo: function (index) {
 
-                var formDesc = document.querySelector('#fdescricao').value
+                var i = parseInt(index.dataset.objectIndex)
 
-                var formUnid = document.querySelector('#funidade').value
+                var formTitulo = document.querySelector('#ftitulo').value
 
-                var formPrec = document.querySelector('#fpreco').value
+                var formArea = document.querySelector('#farea').value
 
-                var formSald = document.querySelector('#fsaldo').value
+                var formLink = document.querySelector('#flink').value
 
-                var codigo = document.querySelector('#fcodigo').value
+                var formData = document.querySelector('#fdataPublicacao').value
 
+                var id = document.querySelector('#fid').value
+
+                console.log(id);
 
    
                 var body = {
-                    descricao: formDesc, 
-                    unidade: formUnid, 
-                    preco: parseFloat(formPrec).toFixed(2), 
-                    saldo: parseFloat(formSald).toFixed(2)
+                    titulo: formTitulo, 
+                    area: formArea, 
+                    hiperLink: formLink, 
+                    dataPublicacao: formData
                 }
 
-                axios.put(`${URLAPP}/${codigo}`, body)
+                axios.put(`${URLAPP}/${id}`, body)
                     .then(function (response) {
                         console.log(response)
-                        formResu.innerText = `Produto alterado!`
+                        vApp.artigos[i] = response.data
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -124,45 +149,49 @@ function createVueApp() {
             deleteArtigo: function (obj) {
                 var i = parseInt(obj.dataset.objectIndex)
 
-                var product = vApp.artigos[i]
+                var article = vApp.artigos[i]
 
-                var codigo = product.codigo
+                var id = article.id
 
-                console.log(codigo)
+                console.log(id)
 
-                axios.delete(`${URLAPP}/${codigo}`)
+                axios.delete(`${URLAPP}/${id}`)
                     .then(function (response) {
                         console.log(response)
+                        vApp.artigos.splice(i, 1)
                 })
                 .catch( function (error) {
                     console.log(error)
                 })
             }
         }
+    
+        
     })
 }
 
 function enablePut(index) {
 
-    var btnSend = document.querySelector('#btnSend')
+
+    var btnSend = document.querySelector('#btnCad')
 
     btnSend.innerText = 'Alterar'
 
-    btnSend.setAttribute('onclick', 'vApp.putProduto()')
-
     var i = parseInt(index.dataset.objectIndex)
+    
+    btnSend.setAttribute('onclick', (`vApp.putArtigo(${index})`))
 
-    var product = vApp.artigos[i]
+    var article = vApp.artigos[i]
 
-    document.querySelector('#fdescricao').value = product.descricao
+    document.querySelector('#ftitulo').value = article.titulo
 
-    document.querySelector('#funidade').value = product.unidade
+    document.querySelector('#farea').value = article.area
 
-    document.querySelector('#fpreco').value = product.preco
+    document.querySelector('#flink').value = article.link
 
-    document.querySelector('#fsaldo').value = product.saldo
+    document.querySelector('#fdataPublicacao').value = article.dataPublicacao
 
-    document.querySelector('#fcodigo').value = product.codigo
+    document.querySelector('#fid').value = article.id
 
 }
 
