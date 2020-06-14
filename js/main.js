@@ -77,12 +77,6 @@ function createVueApp() {
                 }
                
             },
-
-            getData: function (){
-
-
-
-            },
             postArtigo: function () {
 
                 var formTitulo = document.querySelector('#ftitulo').value
@@ -115,7 +109,7 @@ function createVueApp() {
             },
             putArtigo: function (index) {
 
-                var i = parseInt(index.dataset.objectIndex)
+                //var i = parseInt(index.dataset.objectIndex)
 
                 var formTitulo = document.querySelector('#ftitulo').value
 
@@ -127,7 +121,7 @@ function createVueApp() {
 
                 var id = document.querySelector('#fid').value
 
-                console.log(id);
+                console.log(index);
 
    
                 var body = {
@@ -140,7 +134,10 @@ function createVueApp() {
                 axios.put(`${URLAPP}/${id}`, body)
                     .then(function (response) {
                         console.log(response)
-                        vApp.artigos[i] = response.data
+                        vApp.artigos[index] = response.data
+                        vApp.artigos.push(response.data)
+                        vApp.artigos.splice(vApp.artigos.length - 1, 1)
+
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -163,23 +160,55 @@ function createVueApp() {
                 .catch( function (error) {
                     console.log(error)
                 })
+            },
+            getData: function (){
+
+                let inputDate = new Date(document.getElementById('input-date').value)
+                let formData = document.querySelector('#fdataPublicacao').value
+
+                
+                
+
             }
         }
     
         
     })
 }
+function enablePost(){
+
+    var btnCad = document.querySelector('#btnCad')
+    var titulo = document.querySelector('#alterar')
+
+    btnCad.innerText = 'Cadastrar'
+    titulo.innerText = 'Cadastrar artigo'
+
+    btnCad.setAttribute('onclick', 'vApp.postArtigo()')
+
+    document.querySelector('#ftitulo').value = ''
+
+    document.querySelector('#farea').value = ''
+
+    document.querySelector('#flink').value = ''
+
+    document.querySelector('#fdataPublicacao').value = ''
+
+    document.querySelector('#fid').value = ''
+
+}
 
 function enablePut(index) {
 
 
     var btnSend = document.querySelector('#btnCad')
+    var titulo = document.querySelector('#alterar')
 
     btnSend.innerText = 'Alterar'
+    titulo.innerText = 'Alterar artigo'
 
     var i = parseInt(index.dataset.objectIndex)
     
-    btnSend.setAttribute('onclick', (`vApp.putArtigo(${index})`))
+    btnSend.setAttribute('onclick', `vApp.putArtigo(${i})`)
 
     var article = vApp.artigos[i]
 
@@ -187,7 +216,7 @@ function enablePut(index) {
 
     document.querySelector('#farea').value = article.area
 
-    document.querySelector('#flink').value = article.link
+    document.querySelector('#flink').value = article.hiperLink
 
     document.querySelector('#fdataPublicacao').value = article.dataPublicacao
 

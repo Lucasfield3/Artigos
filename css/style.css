@@ -8,3 +8,10 @@ select:hover{
 .data {
 width: 3vh;
 }
+#button-date {
+    border-radius: 0px 5px 5px 0px;
+}
+#style-date{
+    width: 108% !important;
+    margin-right: 2vh !important;
+}
