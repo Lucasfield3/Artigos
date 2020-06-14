@@ -162,12 +162,42 @@ function createVueApp() {
                 })
             },
             getData: function (){
-
-                let inputDate = new Date(document.getElementById('input-date').value)
+                let busca = document.querySelector('#campo-busca').value
+                let tipoBusca = document.getElementById('tipo-busca').value
+                let inputFrom = document.getElementById('date-from').value
+                let inputTo = document.getElementById('date-to').value
                 let formData = document.querySelector('#fdataPublicacao').value
 
-                
-                
+                if(busca == '') {
+                    axios.get(`${URLAPP}/datas?from=${inputFrom}&to=${inputTo}`)
+                        .then( function (response) {
+                            console.log(response)
+                            if (response.status == 200){
+                                vApp.artigos = response.data
+                            }else if(response.status == 204){
+                                alert('busca não existe');
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error(error)
+                    })
+                }else if(tipoBusca == 'titulo-area' && busca != ''){
+
+                    axios.get(`${URLAPP}/titulo-area-datas?search=${busca}&from=${inputFrom}&to=${inputTo}`)
+                        .then( function (response) {
+                            console.log(response)
+                            if (response.status == 200){
+                                vApp.artigos = response.data
+                            }else if(response.status == 204){
+                                alert('busca não existe');
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error(error)
+                    })
+
+                }
+
 
             }
         }
