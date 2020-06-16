@@ -196,6 +196,10 @@ function createVueApp() {
                             console.error(error)
                     })
 
+                }else if (tipoBusca == 'id' && busca != ''){
+                    alert('busca não existe');
+                }else if (tipoBusca == 'link' && busca != ''){
+                    alert('busca não existe');
                 }
 
 
