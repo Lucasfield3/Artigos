@@ -15,7 +15,18 @@ function createVueApp() {
                     .then(function (response) {
                         console.log(response)
                     if(response.status == 200){
-                        vApp.artigos = response.data;
+                        let listaArt = []
+                        for(let artigo of response.data){
+                            let dataFormat =  new Date(artigo.dataPublicacao)
+                            let dia = dataFormat.getDate()
+                            let mes = dataFormat.getMonth()
+                            let ano = dataFormat.getFullYear()
+                            dataFormat = dia + '/' + (mes++) + '/' + ano;
+                            artigo.dataPublicacao = dataFormat
+                            listaArt.push(artigo)
+                            
+                        }
+                        vApp.artigos = listaArt;
                     }else {
                         vApp.artigos = [];
                     }
@@ -78,6 +89,8 @@ function createVueApp() {
                
             },
             postArtigo: function () {
+                //.currentDate.toLocaleDateString(this._locale);
+                //pt-BR
 
                 var formTitulo = document.querySelector('#ftitulo').value
 
@@ -85,7 +98,9 @@ function createVueApp() {
 
                 var formLink = document.querySelector('#flink').value
 
-                var formData = document.querySelector('#fdataPublicacao').value
+                var formData = new Date(document.querySelector('#fdataPublicacao').value)
+
+                console.log(formData)
 
                 document.querySelector('#fid').value = ''
    
@@ -110,14 +125,15 @@ function createVueApp() {
             putArtigo: function (index) {
 
                 //var i = parseInt(index.dataset.objectIndex)
-
+                //_new = _str.split('-').reverse().join('-');
                 var formTitulo = document.querySelector('#ftitulo').value
 
                 var formArea = document.querySelector('#farea').value
 
                 var formLink = document.querySelector('#flink').value
 
-                var formData = document.querySelector('#fdataPublicacao').value
+                var formData = new Date(document.querySelector('#fdataPublicacao').value)
+               
 
                 var id = document.querySelector('#fid').value
 
