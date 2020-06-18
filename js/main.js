@@ -17,13 +17,8 @@ function createVueApp() {
                     if(response.status == 200){
                         let listaArt = []
                         for(let artigo of response.data){
-                            let dataFormat =  new Date(artigo.dataPublicacao)
-                            let dia = dataFormat.getDate()
-                            let mes = dataFormat.getMonth()
-                            let ano = dataFormat.getFullYear()
-                            dataFormat = dia + '/' + (mes++) + '/' + ano;
-                            artigo.dataPublicacao = dataFormat
-                            listaArt.push(artigo)
+
+                            listaArt.push(dataPt(artigo))
                             
                         }
                         vApp.artigos = listaArt;
@@ -45,7 +40,13 @@ function createVueApp() {
                         .then( function (response) {
                             console.log(response)
                             if (response.status == 200){
-                                vApp.artigos = response.data
+                                let listaArt = []
+                                for(let artigo of response.data){
+        
+                                    listaArt.push(dataPt(artigo))
+                                    
+                                }
+                                vApp.artigos = listaArt;
                             }else if(response.status == 204){
                                 alert('busca não existe');
                             }
@@ -59,7 +60,7 @@ function createVueApp() {
                         .then( function (response) {
                             console.log(response)
                             if (response.status == 200){
-                                vApp.artigos = [response.data]
+                                vApp.artigos = [dataPt(response.data)]
                             }else if(response.status == 204){
                                 alert('busca não existe');
                             }
@@ -73,7 +74,7 @@ function createVueApp() {
                         .then( function (response) {
                             console.log(response)
                             if (response.status == 200){
-                                vApp.artigos = [response.data]
+                                vApp.artigos = [dataPt(response.data)]
                             }else if(response.status == 204){
                                 alert('busca não existe');
                             }
@@ -114,7 +115,7 @@ function createVueApp() {
                 axios.post(URLAPP, body)
                     .then(function (response) {
                         console.log(response)
-                        vApp.artigos.push(response.data)
+                        vApp.artigos.push(dataPt(response.data))
                     })
                     .catch(function (error) {
                         console.log(error)
@@ -150,7 +151,7 @@ function createVueApp() {
                 axios.put(`${URLAPP}/${id}`, body)
                     .then(function (response) {
                         console.log(response)
-                        vApp.artigos[index] = response.data
+                        vApp.artigos[index] = dataPt(response.data)
                         vApp.artigos.push(response.data)
                         vApp.artigos.splice(vApp.artigos.length - 1, 1)
 
@@ -189,7 +190,13 @@ function createVueApp() {
                         .then( function (response) {
                             console.log(response)
                             if (response.status == 200){
-                                vApp.artigos = response.data
+                                let listaArt = []
+                                for(let artigo of response.data){
+        
+                                    listaArt.push(dataPt(artigo))
+                                    
+                                }
+                                vApp.artigos = listaArt;
                             }else if(response.status == 204){
                                 alert('busca não existe');
                             }
@@ -203,7 +210,13 @@ function createVueApp() {
                         .then( function (response) {
                             console.log(response)
                             if (response.status == 200){
-                                vApp.artigos = response.data
+                                let listaArt = []
+                                for(let artigo of response.data){
+        
+                                    listaArt.push(dataPt(artigo))
+                                    
+                                }
+                                vApp.artigos = listaArt;
                             }else if(response.status == 204){
                                 alert('busca não existe');
                             }
@@ -272,5 +285,17 @@ function enablePut(index) {
 
     document.querySelector('#fid').value = article.id
 
+}
+function dataPt(obj){
+
+    let dataFormat =  new Date(obj.dataPublicacao)
+    let dia = dataFormat.getDate()
+    let mes = dataFormat.getMonth()
+    let ano = dataFormat.getFullYear()
+    dataFormat = (++dia) + '/' + (++mes) + '/' + ano;
+    obj.dataPublicacao = dataFormat
+
+    return obj
+                        
 }
 
